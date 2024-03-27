@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: handler-service
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: handler-service
+  template:
+    metadata:
+      labels:
+        app: handler-service
+    spec:
+      containers:
+      - name: handler-service
+        image: handler-service-image
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+        ports:
+          - containerPort: 8082
+        env:
+          - name: RATE_LIMITING_SERVICE_URL
+            value: "http://rate-limiting-api:8081"
+          - name: SERVICE_BUS_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: service-bus-secrets
+                key: SERVICE_BUS_CONNECTION_STRING
+          - name: SERVICE_BUS_TOPIC_NAME
+            valueFrom:
+              secretKeyRef:
+                name: service-bus-secrets
+                key: SERVICE_BUS_TOPIC_NAME
+          - name: SERVICE_BUS_SUBSCRIPTION_NAME
+            valueFrom:
+              secretKeyRef:
+                name: service-bus-secrets
+                key: SERVICE_BUS_SUBSCRIPTION_NAME
+          - name: REDIS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: redis
+                key: redis-password
+          - name: REDIS_HOST
+            value: "redis-master.default.svc.cluster.local"
+          - name: REDIS_PORT
+            value: "6379"
+          - name: AZURE_LOG_LEVEL
+            value: "ERROR"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: handler-service
+  labels:
+    app: handler-service
+spec:
+  selector:
+    app: handler-service
+  ports:
+    - protocol: TCP
+      name: http-traffic
+      port: 8080
+      targetPort: 8082

@@ -1,0 +1,5 @@
+export LOCATION=uksouth
+export RESOURCE_GROUP_NAME=rate-limiting-sample-rg
+export TOPIC_NAME=rate-limiting-sample-fifo-topic
+export TOPIC_SUBSCRIPTION_NAME=rate-limiting-sample-fifo-topic-subs
+az configure --defaults location=$LOCATION group=$RESOURCE_GROUP_NAME

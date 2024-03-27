@@ -1,0 +1,7 @@
+APIM URL: https://apim-j2rh5kg3vxkww.azure-api.net is set for the load testing
+kubectl logs rate-limiting-api-5769b8594b-fwxj9 --namespace default > apiafterv2.log
+kubectl logs -l app=rate-limiting-api --namespace default > api_service_afterv2.log
+kubectl logs  handler-service-6c755b75fb-br96m --namespace default > handler1_afterv2.log
+kubectl logs  handler-service-6c755b75fb-tm5lw --namespace default > handler2_afterv2.log
+kubectl logs handler-service-6c755b75fb-xngvj --namespace default > handler3_afterv2.log
+kubectl logs -l app=handler-service --namespace default > handler_afterv2.log
